@@ -16,3 +16,20 @@ $ bin/rake rails:template LOCATION=/path/to/template_file
 
 : guard를 이용한 minitest 자동화를 위한 템플릿
 
+### devise_auth_template.rb
+
+* Gemfile : bootstrap, font-awesome-rails, simple_form, devise, rolify, authority
+* Helpers : flash_class, alert_box, flash_box
+* MiniTest automation : guard
+* Generate Welcome#index
+* Root route setting to welcome#index
+* Application layout file updated as follows:
+  ```erb
+  <body>
+    <div class='container'>
+      <%= flash_box(flash) %>
+      <%= yield %>
+    </div>
+  </body>
+  ```
+
