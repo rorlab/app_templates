@@ -32,6 +32,9 @@ gems.each do | gem_name |
   end
 end
 
+gem_group :development do
+  gem 'letter_opener'
+end
 
 # Minitest 자동화를 위한 젬 설치
 say "Some gems for the automation of Minitest will be added and setup."
@@ -56,7 +59,7 @@ if yes?("Do you want to set up the assets and layout for Bootstrap? [y|n]")
   inside 'app/assets/stylesheets' do
     remove_file 'application.css'
     create_file 'application.css.scss' do
-      "@import 'bootstrap-sprockets';\n@import 'bootstrap';\n@import 'bootstrap/theme';\n@import 'font-awesome';\n\n.alert { margin-top: 1em;}"
+      "@import 'bootstrap-sprockets';\n@import 'bootstrap';\n@import 'bootstrap/theme';\n@import 'font-awesome';\n\n.alert { margin-top: 1em;}\nbody { padding: 5em 0 2em; }"
     end
   end
 
@@ -67,14 +70,19 @@ if yes?("Do you want to set up the assets and layout for Bootstrap? [y|n]")
 
   # flash_box 헬퍼 메소드 추가
   inside 'app/helpers' do
-    get 'https://gist.githubusercontent.com/rorlab/b8b2ca966867d5839bdf/raw/c293f4af714e6ec35ea8fc590bc76ee98a7f3d65/application_helper.rb'
+    remove_file 'application_helper.rb'
+    get 'https://gist.githubusercontent.com/rorlab/b8b2ca966867d5839bdf/raw/45e7cee9c7af7a0ac1c5b7f00d8194d161c36221/application_helper.rb'
   end
 
   # 어플리케이션 레이아웃 파일 업데이트
   inside 'app/views/layouts' do
-    insert_into_file 'application.html.erb', "\t<div class='container'>\n\t\t<%= flash_box(flash) %>\n\t\t", before: "<%= yield %>"
-    insert_into_file 'application.html.erb', "\n\t</div>", after: "<%= yield %>"
+    remove_file "application.html.erb"
+    get 'https://gist.githubusercontent.com/rorlab/bdc7763ffacc5ac9acd7/raw/afd0003e6f42faed891485c0ec379c8f63d7de58/application.html.erb'
   end
+  # inside 'app/views/layouts' do
+  #   insert_into_file 'application.html.erb', "\t<div class='container'>\n\t\t<%= flash_box(flash) %>\n\t\t", before: "<%= yield %>"
+  #   insert_into_file 'application.html.erb', "\n\t</div>", after: "<%= yield %>"
+  # end
 end
 
 # Welcome 컨트롤러 및 index 액션 생성
@@ -95,6 +103,18 @@ if yes?("Do you want to install simple_form for bootstrap? [y|n]")
   remove_file 'lib/templates/erb/scaffold/_form.html.erb'
   get 'https://gist.githubusercontent.com/rorlab/911efc2e2e5791eb49ba/raw/f2f0897f9a5d8c23b362914c5cc5513a358e01de/_form.html.erb', 'lib/templates/erb/scaffold/_form.html.erb'
 end
+
+
+#########################
+# Devise 셋업
+#########################
+generate 'devise:install'
+generate 'devise', 'User'
+generate 'devise:views', 'users'
+application(nil, env: "development") do
+  "\nconfig.action_mailer.default_url_options = { host: 'localhost', port: 3000 }\n\tconfig.action_mailer.delivery_method = :letter_opener\n"
+end
+rake 'db:migrate'
 
 #########################
 # Test 자동화 셋업
