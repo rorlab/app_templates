@@ -12,24 +12,18 @@ $ rails new app_name -m template_file
 $ bin/rake rails:template LOCATION=/path/to/template_file
 ```
 
-### minitest_template.rb
+### 1. minitest_template.rb
 
 : guard를 이용한 minitest 자동화를 위한 템플릿
 
-### devise_auth_template.rb
+### 2. devise_auth_template.rb
 
 * Gemfile : bootstrap, font-awesome-rails, simple_form, devise, rolify, authority
 * Helpers : flash_class, alert_box, flash_box
 * MiniTest automation : guard
-* Generate Welcome#index
-* Root route setting to welcome#index
-* Application layout file updated as follows:
-  ```erb
-  <body>
-    <div class='container'>
-      <%= flash_box(flash) %>
-      <%= yield %>
-    </div>
-  </body>
-  ```
+* Welcome controller generated
+* Root route set to welcome#index
+* Application layout file updated
+
+> **Note** : rolify and authority should be set up. You can use `fa_icon()` and `fa_stacked_icon()` with font-awesome-rails gem installed.
 
